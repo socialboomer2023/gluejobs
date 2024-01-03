@@ -1,20 +1,35 @@
 pipeline {
     agent any
+
     stages {
-        stage('Build') {
+        stage('GitHub Webhook Trigger') {
             steps {
-                echo 'Building...'
+                script {
+                    // Check if the webhookPayload variable is available
+                    if (env.webhookPayload) {
+                        echo "GitHub Webhook Payload: ${env.webhookPayload}"
+                        
+                        // Parse the JSON payload
+                        def payload = readJSON text: env.webhookPayload
+                        
+                        // Access specific information from the payload
+                        def repositoryName = payload.repository.name
+                        def branchName = payload.ref.split('/').last()
+
+                        echo "Repository Name: ${repositoryName}"
+                        echo "Branch Name: ${branchName}"
+
+                        // Your custom logic based on GitHub webhook data
+                        // For example, trigger specific actions based on branch or event type
+                    } else {
+                        echo "No GitHub webhook payload found. This build might not be triggered by a webhook."
+                    }
+                }
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-            }
-        }
+
+        // Add more stages or steps as needed for your build pipeline
     }
+
+    // Add post-build actions or other configurations as needed
 }
