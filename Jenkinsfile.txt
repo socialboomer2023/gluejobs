@@ -62,7 +62,7 @@ pipeline {
                             withAWS(credentials: 'AWS_CREDENTIAL_ID', region: 'us-east-1') {
                                 filesToUpload.each { file ->
                                     // Use '/' as a separator for file path
-                                    def relativePath = file.replace("\\", "/").replaceFirst('.+?/workspace/aws_cicdpipeline/', '')
+                                    def relativePath = file.replace("\\", "/").replaceFirst('.+?/workspace/gitPushAutoCICD/', '')
 
                                     echo "Uploading: $relativePath"
 
